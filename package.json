@@ -1,0 +1,37 @@
+{
+    "name": "advent-of-code-2019",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "1": "node 1.js",
+        "2": "node 2.js",
+        "3": "node 3.js",
+        "4": "node 4.js",
+        "5": "node 5.js",
+        "6": "node 6.js",
+        "7": "node 7.js",
+        "8": "node 8.js",
+        "9": "node 9.js",
+        "10": "node 10.js",
+        "11": "node 11.js",
+        "12": "node 12.js",
+        "13": "node 13.js",
+        "14": "node 14.js",
+        "15": "node 15.js",
+        "16": "node 16.js",
+        "17": "node 17.js",
+        "18": "node 18.js",
+        "19": "node 19.js",
+        "20": "node 20.js",
+        "21": "node 21.js",
+        "22": "node 22.js",
+        "23": "node 23.js",
+        "24": "node 24.js",
+        "25": "node 25.js"
+    },
+    "author": "Andrew Schimelpfening",
+    "license": "ISC",
+    "dependencies": {
+        "readline-sync": "^1.4.10"
+    }
+}
