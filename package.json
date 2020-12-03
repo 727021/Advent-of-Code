@@ -1,0 +1,24 @@
+{
+    "name": "advent-of-code",
+    "version": "1.0.0",
+    "description": "This is where I keep my solutions for the yearly Advent of Code puzzles. While I will branch out occasionally, most of the code here is written in JavaScript and run with Node.js.",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/727021/Advent-of-Code.git"
+    },
+    "author": "Andrew Schimelpfening",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/727021/Advent-of-Code/issues"
+    },
+    "homepage": "https://github.com/727021/Advent-of-Code#readme",
+    "dependencies": {
+        "chalk": "^4.1.0",
+        "figlet": "^1.5.0",
+        "readline-sync": "^1.4.10"
+    }
+}
