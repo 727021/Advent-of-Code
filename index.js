@@ -70,7 +70,7 @@ const commands = {
                 case 'q':
                     console.log(yellow('quit'))
                     console.log('  Quit AoC')
-                    console.log(gray('Aliases: quit, q'))
+                    console.log(gray('Aliases: quit, q, exit'))
                     break
                 default:
                     console.log('Invalid command', red(command))
@@ -142,6 +142,7 @@ commands.help()
 // Run main loop
 promptCLLoop(
     {
+        '': () => false,
         help: commands.help,
         '?': commands.help,
         year: commands.year,
@@ -153,7 +154,8 @@ promptCLLoop(
         clear: commands.clear,
         cls: commands.clear,
         quit: commands.quit,
-        q: commands.quit
+        q: commands.quit,
+        exit: commands.quit
     },
     {
         prompt: {
