@@ -4,17 +4,12 @@ const { textSync: figlet } = require('figlet')
 const { join } = require('path')
 const { readdirSync } = require('fs')
 
-// TODO Refactor so years/days are checked on the fly
 // Load available years/days
-const dir = readdirSync('./')
-const years = dir.filter(i => /^\d{4}$/.test(i))
-let adventCalendar = {}
-for (const year of years) {
-    const days = readdirSync(join(__dirname, year)).filter(i =>
-        /^\d{1,2}\.js$/.test(i)
-    )
-    adventCalendar[year] = days.map(d => ({ day: +d.split('.')[0], file: d }))
-}
+const years = () => readdirSync('./').filter(i => /^\d{4}$/.test(i))
+const days = year =>
+    readdirSync(join(__dirname, year))
+        .filter(i => /^\d{1,2}\.js$/.test(i))
+        .map(i => +i.split('.')[0])
 
 let currentYear = null
 
@@ -93,11 +88,11 @@ const commands = {
             )
             console.log('Valid Years:')
             console.log(
-                `\t${years
+                `\t${years()
                     .map(y => (y == currentYear ? green(y) : y))
                     .join(', ')}`
             )
-        } else if (Number(y) && adventCalendar.hasOwnProperty(y.toString())) {
+        } else if (Number(y) && years().some(i => +i === +y)) {
             currentYear = y.toString()
             console.log(`Set year to ${y}`)
         } else {
@@ -114,11 +109,10 @@ const commands = {
             )
         } else if (day === undefined) {
             console.log(`Available days for ${green(currentYear)}:`)
-            const days = adventCalendar[currentYear].map(d => d.day)
-            console.log(`\t${days.join(', ')}`)
+            console.log(`\t${days(currentYear).join(', ')}`)
         } else if (!Number(day) || +day < 1 || +day > 25) {
             console.log(`Invalid day ${red(day)}`)
-        } else if (!adventCalendar[currentYear].some(d => +d.day === +day)) {
+        } else if (!days(currentYear).some(d => +d === +day)) {
             console.log(`No solution for ${green(currentYear)}-${green(day)}`)
         } else {
             console.log(
