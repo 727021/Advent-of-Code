@@ -2,7 +2,7 @@ const { promptCLLoop } = require('readline-sync')
 const { yellowBright: yellow, greenBright: green, red, gray } = require('chalk')
 const { textSync: figlet } = require('figlet')
 const { join } = require('path')
-const { readdirSync } = require('fs')
+const { readdirSync, readFileSync } = require('fs')
 
 // Load available years/days
 const years = () => readdirSync('./').filter(i => /^\d{4}$/.test(i))
@@ -121,7 +121,14 @@ const commands = {
                 green(currentYear) + '-' + green(day)
             )
             console.log()
-            require(`./${currentYear}/${day}`)()
+            eval(`
+            ;(() => {
+                ${readFileSync(join(__dirname, currentYear, `${day}.js`))
+                    .toString()
+                    .replace(/require\(\'\.\//g, `require('./${currentYear}/`)
+                    .replace(/__dirname/g, `__dirname, '${currentYear}'`)}
+            })()
+            `)
             console.log()
             console.log(gray('Finished'))
         }
