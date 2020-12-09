@@ -14,5 +14,9 @@ To run my solutions, use the CLI tool built into this app. First run `npm instal
 | clear          | Clear the console window                             |
 | quit           | Quit AoC                                             |
 
+![](img/cli-1.png)
+
+![](img/cli-2.png)
+
 ---
 If you want to take part in Advent of Code yourself, check it out at https://adventofcode.com/.
