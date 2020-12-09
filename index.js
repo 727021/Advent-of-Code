@@ -12,6 +12,7 @@ const days = year =>
         .map(i => +i.split('.')[0])
 
 let currentYear = null
+let prevError = null
 
 // Define console commands
 const commands = {
@@ -26,6 +27,8 @@ const commands = {
             console.log(
                 '    Display available days or run the solution for a day'
             )
+            console.log(' ', yellow('error'))
+            console.log('    Display error details')
             console.log(' ', yellow('clear'))
             console.log('    Clear the console window')
             console.log(' ', yellow('quit'))
@@ -59,6 +62,15 @@ const commands = {
                     console.log(yellow('run'), `[${yellow('day')}]`)
                     console.log("  Run the solution for a day's puzzles")
                     console.log(gray('Aliases: run, r, day, d'))
+                    break
+                case 'error':
+                case 'err':
+                case 'e':
+                    console.log(yellow('error'))
+                    console.log(
+                        '  Display any errors caused by the last run solution'
+                    )
+                    console.log(gray('Aliases: error, err, e'))
                     break
                 case 'clear':
                 case 'cls':
@@ -121,16 +133,47 @@ const commands = {
                 green(currentYear) + '-' + green(day)
             )
             console.log()
-            eval(`
-            ;(() => {
-                ${readFileSync(join(__dirname, currentYear, `${day}.js`))
-                    .toString()
-                    .replace(/require\(\'\.\//g, `require('./${currentYear}/`)
-                    .replace(/__dirname/g, `__dirname, '${currentYear}'`)}
-            })()
-            `)
-            console.log()
-            console.log(gray('Finished'))
+            try {
+                eval(`
+                    ;(() => {
+                        ${readFileSync(
+                            join(__dirname, currentYear, `${day}.js`)
+                        )
+                            .toString()
+                            .replace(
+                                /require\(\'\.\//g,
+                                `require('./${currentYear}/`
+                            )
+                            .replace(
+                                /__dirname/g,
+                                `__dirname, '${currentYear}'`
+                            )}
+                    })()
+                        `)
+                console.log()
+                console.log(gray('Finished'))
+                prevError = null
+            } catch (err) {
+                console.log()
+                console.error(red('ERROR:'), err.message)
+                console.error('See', yellow('error'), 'for more information')
+                prevError = err
+                prevError.year = currentYear
+                prevError.day = day
+            }
+        }
+    },
+    error: () => {
+        if (prevError === null) {
+            console.log('No error to display')
+        } else {
+            console.log(
+                'Error caused by',
+                green('AoC'),
+                `${green(prevError.year)}-${green(prevError.day)}:\n`
+            )
+            console.error(red('ERROR:'), prevError.message)
+            console.error(prevError.stack.split('\n').slice(1).join('\n'))
         }
     },
     clear: () => {
@@ -158,6 +201,9 @@ promptCLLoop(
         r: commands.run,
         day: commands.run,
         d: commands.run,
+        error: commands.error,
+        err: commands.error,
+        e: commands.error,
         clear: commands.clear,
         cls: commands.clear,
         quit: commands.quit,
