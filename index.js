@@ -1,5 +1,12 @@
 const { promptCLLoop } = require('readline-sync')
-const { yellowBright: yellow, greenBright: green, red, gray } = require('chalk')
+const {
+    yellowBright: yellow,
+    greenBright: green,
+    red,
+    gray,
+    bgGray,
+    whiteBright
+} = require('chalk')
 const { textSync: figlet } = require('figlet')
 const { join } = require('path')
 const { readdirSync, readFileSync } = require('fs')
@@ -33,6 +40,10 @@ const commands = {
             console.log(
                 '    Display available days or run the solution for a day'
             )
+            console.log(' ', yellow('display'), `[${yellow('day')}]`)
+            console.log(
+                '    Display available days or display the solution code for a day'
+            )
             console.log(' ', yellow('error'))
             console.log('    Display error details')
             console.log(' ', yellow('clear'))
@@ -62,12 +73,22 @@ const commands = {
                 case 'run':
                 case 'r':
                 case 'day':
-                case 'd':
                     console.log(yellow('run'))
                     console.log('  Display available days for the current year')
                     console.log(yellow('run'), `[${yellow('day')}]`)
                     console.log("  Run the solution for a day's puzzles")
-                    console.log(gray('Aliases: run, r, day, d'))
+                    console.log(gray('Aliases: run, r, day'))
+                    break
+                case 'display':
+                case 'd':
+                case 'show':
+                    console.log(yellow('display'))
+                    console.log('  Display available days for the current year')
+                    console.log(yellow('display'), `[${yellow('day')}]`)
+                    console.log(
+                        "  Display the solution code for a day's puzzles"
+                    )
+                    console.log(gray('Aliases: display, d, show'))
                     break
                 case 'error':
                 case 'err':
@@ -169,6 +190,51 @@ const commands = {
             }
         }
     },
+    display: day => {
+        if (currentYear === null) {
+            console.log('Year is not set')
+            console.log(
+                'Choose a year with',
+                yellow('year'),
+                `[${yellow('year')}]`
+            )
+        } else if (day === undefined) {
+            console.log(`Available days for ${green(currentYear)}:`)
+            console.log(`\t${days(currentYear).join(', ')}`)
+        } else if (!Number(day) || +day < 1 || +day > 25) {
+            console.log(`Invalid day ${red(day)}`)
+        } else if (!days(currentYear).some(d => +d === +day)) {
+            console.log(`No solution for ${green(currentYear)}-${green(day)}`)
+        } else {
+            const lines = readFileSync(
+                join(__dirname, currentYear, `${day}.js`)
+            )
+                .toString()
+                .replace(/\r/g, '')
+                .split('\n')
+
+            console.log('+-----' + '-'.repeat(82) + '+')
+            const title = `Solution code for ${green('AoC')} ${green(
+                currentYear
+            )}-${green(day)}:`
+            console.log('|     ', title.padEnd(110), '|')
+            console.log('+----+' + '-'.repeat(82) + '+')
+            for (const line in lines)
+                if (line % 2 === 1)
+                    console.log(
+                        `|${(line + 1).toString().padStart(4, '0')}|`,
+                        whiteBright(lines[line].padEnd(80)),
+                        '|'
+                    )
+                else
+                    console.log(
+                        `|${(line + 1).toString().padStart(4, '0')}|`,
+                        bgGray.whiteBright(lines[line].padEnd(80)),
+                        '|'
+                    )
+            console.log('+----+' + '-'.repeat(82) + '+')
+        }
+    },
     error: () => {
         if (prevError === null) {
             console.log('No error to display')
@@ -206,7 +272,9 @@ promptCLLoop(
         run: commands.run,
         r: commands.run,
         day: commands.run,
-        d: commands.run,
+        display: commands.display,
+        d: commands.display,
+        show: commands.display,
         error: commands.error,
         err: commands.error,
         e: commands.error,

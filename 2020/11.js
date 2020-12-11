@@ -1,4 +1,4 @@
-const { readFileSync, writeFileSync } = require('fs')
+const { readFileSync } = require('fs')
 const { join } = require('path')
 
 const input = readFileSync(join(__dirname, '11.txt'))
@@ -9,8 +9,10 @@ const input = readFileSync(join(__dirname, '11.txt'))
 
 /**
  * Rules:
- * - If a seat is empty (L) and there are no occupied seats adjacent to it, the seat becomes occupied
- * - If a seat is occupied (#) and 4+ adjacent seats are also occupied, the seat becomes empty
+ * - If a seat is empty (L) and there are no occupied seats adjacent to it,
+ *   the seat becomes occupied
+ * - If a seat is occupied (#) and 4+ adjacent seats are also occupied,
+ *   the seat becomes empty
  * - Otherwise, a seat's state doesn't change
  * - Floor (.) never changes
  *
