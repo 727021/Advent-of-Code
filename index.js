@@ -5,11 +5,17 @@ const { join } = require('path')
 const { readdirSync, readFileSync } = require('fs')
 
 // Load available years/days
-const years = () => readdirSync('./').filter(i => /^\d{4}$/.test(i))
+const years = () =>
+    readdirSync('./')
+        .filter(i => /^\d{4}$/.test(i))
+        .map(Number)
+        .sort((a, b) => a - b)
 const days = year =>
     readdirSync(join(__dirname, year))
         .filter(i => /^\d{1,2}\.js$/.test(i))
         .map(i => +i.split('.')[0])
+        .map(Number)
+        .sort((a, b) => a - b)
 
 let currentYear = null
 let prevError = null
