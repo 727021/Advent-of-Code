@@ -4,8 +4,11 @@ const {
     greenBright: green,
     red,
     gray,
-    bgGray,
-    whiteBright
+    whiteBright,
+    blue,
+    cyan,
+    green: greenDark,
+    redBright
 } = require('chalk')
 const { textSync: figlet } = require('figlet')
 const { join } = require('path')
@@ -26,6 +29,24 @@ const days = year =>
 
 let currentYear = null
 let prevError = null
+
+const syntax = str => {
+    // BLUE: const let null undefined => true false
+    // CYAN: return for while if else switch case try catch break
+    // RED: Strings
+    // GREEN: Comments
+    return str
+        .replace(
+            /([ \[\(\{]?)((?:const)|(?:let)|(?:null)|(?:undefined)|(?:=>)|(?:true)|(?:false))([\]\)\.\} ])/g,
+            `$1${blue('$2')}$3`
+        )
+        .replace(
+            /([^ ]?)((?:return)|(?:for)|(?:while)|(?:if)|(?:else)|(?:switch)|(?:case)|(?:try)|(?:catch)|(?:break)|(?:continue)|(?:in)|(?:of)) /,
+            `$1${cyan('$2')} `
+        )
+        .replace(/((?:'[^\']*')|(?:"[^\"]")|(?:`[^\`]`))/g, redBright('$1'))
+        .replace(/(\/\/.+$)/g, greenDark('$1'))
+}
 
 // Define console commands
 const commands = {
@@ -220,18 +241,11 @@ const commands = {
             console.log('|     ', title.padEnd(110), '|')
             console.log('+----+' + '-'.repeat(82) + '+')
             for (const line in lines)
-                if (line % 2 === 1)
-                    console.log(
-                        `|${(line + 1).toString().padStart(4, '0')}|`,
-                        whiteBright(lines[line].padEnd(80)),
-                        '|'
-                    )
-                else
-                    console.log(
-                        `|${(line + 1).toString().padStart(4, '0')}|`,
-                        bgGray.whiteBright(lines[line].padEnd(80)),
-                        '|'
-                    )
+                console.log(
+                    `|${(line + 1).toString().padStart(4, '0')}|`,
+                    syntax(whiteBright(lines[line].padEnd(80))),
+                    '|'
+                )
             console.log('+----+' + '-'.repeat(82) + '+')
         }
     },
