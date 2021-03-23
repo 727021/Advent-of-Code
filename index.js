@@ -242,7 +242,7 @@ const commands = {
             console.log('+----+' + '-'.repeat(82) + '+')
             for (const line in lines)
                 console.log(
-                    `|${(line + 1).toString().padStart(4, '0')}|`,
+                    `|${(+line + 1).toString().padStart(4, '0')}|`,
                     syntax(whiteBright(lines[line].padEnd(80))),
                     '|'
                 )
